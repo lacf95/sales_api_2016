@@ -1,3 +1,4 @@
+"use strict";
 exports.select = function(params) {
   let query = '';
   for (i = 0; i < params.length; i++) {

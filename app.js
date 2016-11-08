@@ -1,3 +1,4 @@
+"use strict";
 require('./core/server');
 /*var http = require('http');
 var port = process.env.PORT || 3000;

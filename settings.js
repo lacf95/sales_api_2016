@@ -1,3 +1,4 @@
+"use strict";
 //INFORMACIÓN NECESARIA PARA LA CONEXIÓN A LA BASE DE DATOS SQL SERVER
 exports.dbConfig = {
 	user: 'lchavez1',

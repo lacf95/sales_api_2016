@@ -1,3 +1,4 @@
+"use strict";
 let sqlDB = require('mssql');
 let settings = require('../settings');
 

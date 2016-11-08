@@ -1,3 +1,4 @@
+"use strict";
 let settings = require('../settings');
 let httpMessages = require('./httpMessages');
 let express = require('express');

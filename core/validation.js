@@ -1,3 +1,4 @@
+"use strict";
 exports.entero = function(n) {
   let nx = parseInt(n);
   if (!isNaN(nx) && nx > 0)
