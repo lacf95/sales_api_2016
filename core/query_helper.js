@@ -1,7 +1,7 @@
 "use strict";
 exports.select = function(params) {
   let query = '';
-  for (i = 0; i < params.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     if (i > 0)
       query += ' and ';
     else
@@ -13,7 +13,7 @@ exports.select = function(params) {
 
 exports.update = function(params) {
   let query = '';
-  for (i = 0; i < params.length; i++) {
+  for (let i = 0; i < params.length; i++) {
     if (i > 0)
       query += ', ';
     query += params[i];
