@@ -10,4 +10,5 @@ exports.dbConfig = {
 };
 
 //PUERTO PREDETERMINADO PARA EL SERVIDOR
-exports.webPort = 8080;
+exports.port = process.env.PORT || 3000;
+exports.host = process.env.HOST || '0.0.0.0';

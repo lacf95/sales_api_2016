@@ -1,5 +1,5 @@
-//require('./core/server');
-var http = require('http');
+require('./core/server');
+/*var http = require('http');
 var port = process.env.PORT || 3000;
 var host = process.env.HOST || '0.0.0.0';
 http.createServer(function(req, res) {
@@ -7,3 +7,4 @@ http.createServer(function(req, res) {
   res.end('Hello World from Nitrous\n');
 }).listen(port, host);
 console.log("Server running at "+host+":"+port);
+*/

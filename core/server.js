@@ -105,4 +105,5 @@ router.route("/dias_pago").delete(function (req, resp) {
 //Assing all the routes
 app.use("/api", router);
 //Start listening in the server
-app.listen(settings.webPort);
+app.listen(settings.port, settings.host);
+console.log("Server running at "+settings.host+":"+settings.port);
