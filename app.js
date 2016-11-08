@@ -6,5 +6,4 @@ http.createServer(function(req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.end('Hello World from Nitrous\n');
 }).listen(port, host);
-console.log("Server running at "+host+":"+port);
 */
