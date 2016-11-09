@@ -1,3 +1,4 @@
+"use strict";
 let db = require('../core/database');
 let httpMessages = require('../core/httpMessages');
 let validation = require('../core/validation');
