@@ -47,7 +47,7 @@ router.route("/clientes").post(function (req, resp) {
 router.route("/clientes").put(function (req, resp) {
   clientes.update(req, resp);
 });
-router.route("/clientes/:id").delete(function (req, resp) {
+router.route("/clientes").delete(function (req, resp) {
   clientes.destroy(req, resp);
 });
 // PRODUCTOS

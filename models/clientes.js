@@ -71,7 +71,7 @@ exports.update = function(req, resp) {
 };
 
 exports.destroy = function(req, resp) {
-  let cliente = validation.entero(req.params.id);
+  let cliente = validation.entero(req.body.id);
   try {
     if (cliente > 0) {
       let sqlScript = `delete from clientes where id=${cliente}`;
