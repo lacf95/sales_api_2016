@@ -10,6 +10,8 @@ exports.select = function(req, resp) {
   let sqlScript = 'select * from productos ';
   if (validation.entero(req.query.id) > 0)
     query.push(`id=${validation.entero(req.query.id)}`);
+  if (req.query.nombre)
+    query.push(`nombre LIKE '%${req.query.nombre}%'`);
   if (validation.entero(req.query.vendedor) > 0)
     query.push(`vendedor=${validation.entero(req.query.vendedor)}`);
   if (req.query.descripcion)
@@ -77,7 +79,7 @@ exports.update = function(req, resp) {
 };
 
 exports.destroy = function(req, resp) {
-  let producto = validation.entero(req.body.id);
+  let producto = validation.entero(req.params.id);
   try {
     if (producto > 0) {
       let sqlScript = `delete from productos where id=${producto}`;
