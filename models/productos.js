@@ -53,7 +53,7 @@ exports.update = function(req, resp) {
   let producto = {
     'id': validation.entero(req.body.id),
     'vendedor': validation.entero(req.body.vendedor),
-    'nombre': req.body.nombre
+    'nombre': req.body.nombre,
     'descripcion': req.body.descripcion,
     'precio': validation.flotante(req.body.precio),
     'fotografia': req.body.fotografia
