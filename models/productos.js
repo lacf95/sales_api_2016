@@ -30,13 +30,14 @@ exports.select = function(req, resp) {
 
 exports.set = function(req, resp) {
   let producto = {
+    'nombre': req.body.nombre,
     'descripcion': req.body.descripcion,
     'precio': req.body.precio,
     'fotografia': req.body.fotografia,
     'vendedor': validation.entero(req.body.vendedor)
   };
-  let sqlScript = 'insert into productos (descripcion, precio, fotografia, vendedor) values ';
-  sqlScript += `('${producto['descripcion']}', ${producto['precio']}, '${producto['fotografia']}', ${producto['vendedor']});`;
+  let sqlScript = 'insert into productos (nombre, descripcion, precio, fotografia, vendedor) values ';
+  sqlScript += `('${producto['nombre']}', '${producto['descripcion']}', ${producto['precio']}, '${producto['fotografia']}', ${producto['vendedor']});`;
   sqlScript += ' select scope_identity() as id';
   db.executeSql(sqlScript, function(data, err) {
     if (err)
@@ -52,6 +53,7 @@ exports.update = function(req, resp) {
   let producto = {
     'id': validation.entero(req.body.id),
     'vendedor': validation.entero(req.body.vendedor),
+    'nombre': req.body.nombre
     'descripcion': req.body.descripcion,
     'precio': validation.flotante(req.body.precio),
     'fotografia': req.body.fotografia
@@ -59,6 +61,8 @@ exports.update = function(req, resp) {
   let query = [];
   if (producto['descripcion'])
     query.push(`descripcion='${producto['descripcion']}'`);
+  if (producto['nombre'])
+    query.push(`nombre='${producto['nombre']}'`);
   if (producto['precio'])
     query.push(`precio=${producto['precio']}`);
   if (producto['fotografia'])
