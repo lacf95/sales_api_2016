@@ -13,7 +13,7 @@ exports.select = function(req, resp) {
   if (validation.entero(req.query.vendedor) > 0)
     query.push(`vendedor=${validation.entero(req.query.vendedor)}`);
   if (req.query.nombre)
-    query.push(`nombre like '%${nombre}%'`);
+    query.push(`nombre like '%${req.query.nombre}%'`);
   sqlScript += queryHelper.select(query);
   db.executeSql(sqlScript, function(data, err) {
     if (err)

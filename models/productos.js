@@ -11,7 +11,7 @@ exports.select = function(req, resp) {
   if (validation.entero(req.query.id) > 0)
     query.push(`id=${validation.entero(req.query.id)}`);
   if (req.query.nombre)
-    query.push(`nombre LIKE '%${req.query.nombre}%'`);
+    query.push(`nombre like '%${req.query.nombre}%'`);
   if (validation.entero(req.query.vendedor) > 0)
     query.push(`vendedor=${validation.entero(req.query.vendedor)}`);
   if (req.query.descripcion)
