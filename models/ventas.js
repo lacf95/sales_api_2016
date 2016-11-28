@@ -6,10 +6,10 @@ let queryHelper = require('../core/query_helper');
 
 let invalid = new Error("Parámetros de entrada inválidos");
 
-exports.getVentas = function(req, resp) {
+exports.select = function(req, resp) {
   let query = [];
-  let sqlScript = 'select v.id, total, abonado, abono, proximo_pago, ultimo_pago, horario_pago, no_pagos, dia_pago, dia, tipo_pago, descripcion, cliente, nombre from ventas v ';
-  sqlScript += 'left join dias_pago d on v.dia_pago = d.id left join tipos_pago t on v.tipo_pago = t.id left join clientes c on v.cliente = c.id';
+  let sqlScript = 'select * from ventas ';
+  //sqlScript += 'left join dias_pago d on v.dia_pago = d.id left join tipos_pago t on v.tipo_pago = t.id left join clientes c on v.cliente = c.id';
   // ID DE VENTA
   if (validation.entero(req.query.id) > 0)
     query.push(`id=${validation.entero(req.query.id)}`);
@@ -36,7 +36,7 @@ exports.getVentas = function(req, resp) {
     query.push(`abonado >= total`);
   else if (validation.entero(req.query.abonado) == 2)
     query.push(`abonado < total`);
-  sqlScript += queryHelper.createQuery(query);
+  sqlScript += queryHelper.select(query);
   db.executeSql(sqlScript, function(data, err) {
     if (err)
       httpMessages.show500(req, resp, err);
@@ -45,28 +45,30 @@ exports.getVentas = function(req, resp) {
   });
 };
 
-exports.setVenta = function(req, resp) {
+exports.set = function(req, resp) {
+  let total = (validation.flotante(req.body.total)).toFixed(2);
+  let abonado = (validation.flotante(req.body.abonado)).toFixed(2);
+  let no_pagos = validation.entero(req.body.no_pagos);
+  abonado = (abonado > total) ? total: abonado;
+  no_pagos = (no_pagos < 1) ? 1: no_pagos;
+  let abono = ((total - abonado) / no_pagos).toFixed(2);
   let venta = {
-    'total': req.body.total,
-    'abonado': req.body.abonado,
-    'abono': req.body.abono,
+    'total': total,
+    'abonado': abonado,
+    'abono': abono,
     'proximo_pago': req.body.proximo_pago,
-    'ultimo_pago': req.body.ultimo_pago,
-    'horario_pago': req.body.horario_pago,
-    'no_pagos': validation.entero(req.body.no_pagos),
-    'dia_pago': validation.entero(req.body.dia_pago),
+    'no_pagos': no_pagos,
     'tipo_pago': validation.entero(req.body.tipo_pago),
     'cliente': validation.entero(req.body.cliente)
   };
-  let sqlScript = 'insert into ventas (total, abonado, abono, proximo_pago, ultimo_pago, horario_pago, no_pagos, dia_pago, tipo_pago, cliente) values ';
-  sqlScript += `(${venta['total']}, ${venta['abonado']}, ${venta['abono']}, '${venta['proximo_pago']}', '${venta['ultimo_pago']}', '${venta['horario_pago']}', ${venta['no_pagos']}, ${venta['dia_pago']}, ${venta['tipo_pago']}, ${venta['cliente']});`;
+  let sqlScript = `insert into ventas (total, abonado, abono, proximo_pago, no_pagos, tipo_pago, cliente) values (${venta['total']}, ${venta['abonado']}, ${venta['abono']}, '${venta['proximo_pago']}', ${venta['no_pagos']}, ${venta['tipo_pago']}, ${venta['cliente']});`;
   sqlScript += ' select scope_identity() as id';
   db.executeSql(sqlScript, function(data, err) {
     if (err)
       httpMessages.show500(req, resp, err);
     else {
       data = data[0];
-      httpMessages.show200(req, resp);
+      httpMessages.sendJson(req, resp, data);
     }
   });
 };

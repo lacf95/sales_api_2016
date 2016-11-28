@@ -102,6 +102,13 @@ router.route("/dias_pago").put(function (req, resp) {
 router.route("/dias_pago").delete(function (req, resp) {
   diasPago.destroy(req, resp);
 });
+// VENTAS
+router.route("/ventas").get(function (req, resp) {
+  ventas.select(req, resp);
+});
+router.route("/ventas").post(function (req, resp) {
+  ventas.set(req, resp);
+});
 
 //Assing all the routes
 app.use("/api", router);

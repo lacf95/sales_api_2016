@@ -42,11 +42,11 @@ create table dias_pago (
 
 create table ventas (
   id int identity(1, 1) primary key,
+  fecha datetime default dateadd(hour, -6, getdate()),
   total decimal(18, 2),
   abonado decimal(18, 2),
   abono decimal(18, 2),
-  proximo_pago date,
-  horario_pago time,
+  proximo_pago datetime,
   no_pagos int,
   dia_pago int references dias_pago(id),
   tipo_pago int references tipos_pago(id),
@@ -56,7 +56,8 @@ create table ventas (
 create table abonos (
   id int identity(1, 1) primary key,
   abono decimal(18, 2),
-  fecha date,
+  fecha datetime,
+  estado bit default 0,
   venta int references ventas(id)
 );
 
@@ -64,9 +65,38 @@ create table venta_productos (
   id int identity(1, 1) primary key,
   cantidad int,
   producto int references productos(id),
-  venta int references ventas(id),
-  estado int references estados(id)
+  venta int references ventas(id)
 );
+
+create trigger trigger_insert_ventas on ventas
+after insert
+as
+begin
+  insert into abonos (abono, fecha, venta) select abono, proximo_pago, id from inserted;
+end;
+
+create trigger trigger_update_abonos on abonos
+after update
+as
+begin
+  update ventas set ventas.abonado = (ventas.abonado + inserted.abono), ventas.abono = (ventas.total - (ventas.abonado + inserted.abono)) / (ventas.no_pagos - (select count(*) from abonos where abonos.venta = inserted.venta)) from ventas inner join inserted on ventas.id = inserted.venta;
+  declare @total decimal(18, 2);
+  set @total = (select total from ventas, inserted where ventas.id = inserted.venta);
+  declare @abonado decimal(18, 2);
+  set @abonado = (select abonado from ventas, inserted where ventas.id = inserted.venta);
+  if @abonado >= @total
+  begin
+    return
+  end
+  insert into abonos (abono, fecha, venta) select (select ventas.abono from ventas where ventas.id = inserted.venta), dateadd(day, (select intervalo from tipos_pago t left join ventas v on t.id = v.tipo_pago where v.id = venta), fecha), venta from inserted;
+end;
+
+create trigger trigger_insert_abonoso on abonos
+after insert
+as
+begin
+  update ventas set ventas.proximo_pago = inserted.fecha from ventas inner join inserted on ventas.id = inserted.venta;
+end;
 
 user: lchavez1
 pass: @drian95
