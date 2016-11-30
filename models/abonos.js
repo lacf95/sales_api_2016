@@ -16,8 +16,10 @@ exports.select = function(req, resp) {
   if (validation.entero(req.query.venta) > 0)
     query.push(`venta=${validation.entero(req.query.venta)}`);
   // VENDEDOR
-  if (validation.entero(req.query.vendedor) > 0)
-    query.push(`vendedor=${validation.entero(req.query.vendedor)}`);
+  if (validation.entero(req.query.vendedor) > 0) {
+    let sqlScript = 'select a.* from abonos a left join ventas v on a.venta = v.id lef join clientes c on v.cliente = c.id';
+    query.push(`c.vendedor=${validation.entero(req.query.vendedor)}`);
+  }
   // FECHA DE PAGO
   if (req.query.fecha)
     query.push(`fecha between '${req.query.fecha}' and '${req.query.fecha}'`);
