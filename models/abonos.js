@@ -8,13 +8,13 @@ let invalid = new Error("Parámetros de entrada inválidos");
 
 exports.select = function(req, resp) {
   let query = [];
-  let sqlScript = 'select * from abonos ';
+  let sqlScript = 'select * from abonos a';
   // ID DE ABONO
   if (validation.entero(req.query.id) > 0)
-    query.push(`id=${validation.entero(req.query.id)}`);
+    query.push(`a.id=${validation.entero(req.query.id)}`);
   // VENTA
   if (validation.entero(req.query.venta) > 0)
-    query.push(`venta=${validation.entero(req.query.venta)}`);
+    query.push(`a.venta=${validation.entero(req.query.venta)}`);
   // VENDEDOR
   if (validation.entero(req.query.vendedor) > 0) {
     let sqlScript = 'select a.* from abonos a left join ventas v on a.venta = v.id lef join clientes c on v.cliente = c.id';
@@ -22,10 +22,10 @@ exports.select = function(req, resp) {
   }
   // FECHA DE PAGO
   if (req.query.fecha)
-    query.push(`fecha between '${req.query.fecha}' and '${req.query.fecha}'`);
+    query.push(`a.fecha between '${req.query.fecha}' and '${req.query.fecha}'`);
   // SI YA SE HA PAGADO
   if (validation.entero(req.query.estado) >= 0 && validation.entero(req.query.estado) <= 1)
-    query.push(`estado=${validation.entero(req.query.estado)}`);
+    query.push(`a.estado=${validation.entero(req.query.estado)}`);
   sqlScript += queryHelper.select(query);
   db.executeSql(sqlScript, function(data, err) {
     if (err)
