@@ -13,6 +13,7 @@ let tiposPago = require('../models/tipos_pago');
 let diasPago = require('../models/dias_pago');
 let ventas = require('../models/ventas');
 let ventaProductos = require('../models/venta_productos');
+let abonos = require('../models/abonos');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
@@ -109,7 +110,10 @@ router.route("/ventas").get(function (req, resp) {
 router.route("/ventas").post(function (req, resp) {
   ventas.set(req, resp);
 });
-
+// ABONOS
+router.route("/abonos").get(function (req, resp) {
+  abonos.select(req, resp);
+})
 //Assing all the routes
 app.use("/api", router);
 //Start listening in the server
