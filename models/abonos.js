@@ -36,7 +36,7 @@ exports.select = function(req, resp) {
 exports.update = function(req, resp) {
   let abono = {
     'id': validation.entero(req.body.id),
-    'abono': validation.flotante(req.body.abono)
+    'abono': req.body.abono
   };
   let query = [];
   if (abono['abono'] > 0) {
