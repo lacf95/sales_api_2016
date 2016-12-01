@@ -114,6 +114,9 @@ router.route("/ventas").post(function (req, resp) {
 router.route("/abonos").get(function (req, resp) {
   abonos.select(req, resp);
 })
+router.route("/abonos").put(function (req, resp) {
+  abonos.update(req, resp);
+})
 //Assing all the routes
 app.use("/api", router);
 //Start listening in the server
