@@ -17,16 +17,16 @@ exports.select = function(req, resp) {
     query.push(`a.venta=${validation.entero(req.query.venta)}`);
   // VENDEDOR
   if (validation.entero(req.query.vendedor) > 0) {
-    let sqlScript = 'select a.* from abonos a left join ventas v on a.venta = v.id lef join clientes c on v.cliente = c.id';
+    sqlScript = 'select a.* from abonos a left join ventas v on a.venta = v.id left join clientes c on v.cliente = c.id';
     query.push(`c.vendedor=${validation.entero(req.query.vendedor)}`);
   }
   // FECHA DE PAGO
   if (req.query.fecha)
     query.push(`a.fecha between '${req.query.fecha}' and '${req.query.fecha}'`);
   // SI YA SE HA PAGADO
-  if (validation.entero(req.query.estado) >= 0 && validation.entero(req.query.estado) <= 1)
-    query.push(`a.estado=${validation.entero(req.query.estado)}`);
-  sqlScript += queryHelper.select(query);
+  if (validation.entero(req.query.estado) >= 1 && validation.entero(req.query.estado) <= 2)
+    query.push(`a.estado=${validation.entero(req.query.estado) - 1}`);
+  sqlScript += queryHelper.select(query);  
   db.executeSql(sqlScript, function(data, err) {
     if (err)
       httpMessages.show500(req, resp, err);
