@@ -24,7 +24,7 @@ exports.select = function(req, resp) {
   // SI YA SE HA PAGADO
   if (validation.entero(req.query.estado) >= 1 && validation.entero(req.query.estado) <= 2)
     query.push(`a.estado=${validation.entero(req.query.estado) - 1}`);
-  sqlScript += queryHelper.select(query);  
+  sqlScript += queryHelper.select(query) + " order by fecha asc";
   db.executeSql(sqlScript, function(data, err) {
     if (err)
       httpMessages.show500(req, resp, err);
