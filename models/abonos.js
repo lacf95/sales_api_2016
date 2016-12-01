@@ -8,7 +8,7 @@ let invalid = new Error("Parámetros de entrada inválidos");
 
 exports.select = function(req, resp) {
   let query = [];
-  let sqlScript = 'select * from abonos a';
+  let sqlScript = 'select a.*, c.nombre, c.direccion, c.telefono from abonos a left join ventas v on a.venta = v.id left join clientes c on v.cliente = c.id';
   // ID DE ABONO
   if (validation.entero(req.query.id) > 0)
     query.push(`a.id=${validation.entero(req.query.id)}`);
@@ -16,10 +16,8 @@ exports.select = function(req, resp) {
   if (validation.entero(req.query.venta) > 0)
     query.push(`a.venta=${validation.entero(req.query.venta)}`);
   // VENDEDOR
-  if (validation.entero(req.query.vendedor) > 0) {
-    sqlScript = 'select a.* from abonos a left join ventas v on a.venta = v.id left join clientes c on v.cliente = c.id';
+  if (validation.entero(req.query.vendedor) > 0)
     query.push(`c.vendedor=${validation.entero(req.query.vendedor)}`);
-  }
   // FECHA DE PAGO
   if (req.query.fecha)
     query.push(`a.fecha between '${req.query.fecha}' and '${req.query.fecha}'`);
