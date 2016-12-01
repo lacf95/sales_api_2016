@@ -72,14 +72,32 @@ create trigger trigger_insert_ventas on ventas
 after insert
 as
 begin
-  insert into abonos (abono, fecha, venta) select abono, proximo_pago, id from inserted;
+  declare @estado bit;
+  declare @total decimal(18, 2);
+  declare @abonado decimal(18, 2);
+  set @total = (select total from inserted);
+  set @abonado = (select abonado from inserted);
+  set @estado = 0;
+  if @abonado >= @total
+  begin
+    set @estado = 1;
+  end
+  insert into abonos (abono, fecha, venta, estado) select abono, proximo_pago, id, @estado from inserted;
 end;
 
 create trigger trigger_update_abonos on abonos
 after update
 as
 begin
-  update ventas set ventas.abonado = (ventas.abonado + inserted.abono), ventas.abono = (ventas.total - (ventas.abonado + inserted.abono)) / (ventas.no_pagos - (select count(*) from abonos where abonos.venta = inserted.venta)) from ventas inner join inserted on ventas.id = inserted.venta;
+  declare @no_pagos int;
+  declare @pagados int;
+  set @no_pagos = (select ventas.no_pagos from ventas, inserted where ventas.id = inserted.venta);
+  set @pagados = (select count(*) from abonos, inserted where abonos.venta = inserted.venta);
+  if @pagados >= @no_pagos
+  begin
+    set @pagados = 1;
+  end
+  update ventas set ventas.abonado = (ventas.abonado + inserted.abono), ventas.abono = (ventas.total - (ventas.abonado + inserted.abono)) / @pagados from ventas inner join inserted on ventas.id = inserted.venta;
   declare @total decimal(18, 2);
   set @total = (select total from ventas, inserted where ventas.id = inserted.venta);
   declare @abonado decimal(18, 2);
